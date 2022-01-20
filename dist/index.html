@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <title>抽奖</title>
+</head>
+
+<body style="text-align: center;background:url(./background.jpg);overflow:hidden;">
+    <h1 style="padding-top:5%;font-size: 200%;">抽奖</h1>
+    <div>
+        <div style="width:50%;padding-top: 5%;float:left;">
+            <div id="carousel" class="carousel slide" style="margin:0 auto;width:50%;">
+
+                <div class="carousel-inner" style="color:yellow">
+                    <div class="carousel-item active">
+                        <span class="award">特等奖</span>
+                    </div>
+                    <div class="carousel-item">
+                        <span class="award">一等奖</span>
+                    </div>
+                    <div class="carousel-item">
+                        <span class="award">二等奖</span>
+                    </div>
+                    <div class="carousel-item">
+                        <span class="award">三等奖</span>
+                    </div>
+                </div>
+
+                <!-- 指示符 -->
+                <ul class="carousel-indicators">
+                    <li data-target="#demo" data-slide-to="0" class="active"></li>
+                    <li data-target="#demo" data-slide-to="1"></li>
+                    <li data-target="#demo" data-slide-to="2"></li>
+                    <li data-target="#demo" data-slide-to="3"></li>
+                </ul>
+
+
+                <!-- 左右切换按钮 -->
+                <a class="carousel-control-prev" href="#carousel" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#carousel" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </a>
+
+            </div>
+            <div id="status" style="padding-top:5%">
+                特等奖共1份，已抽0份
+            </div>
+            <div style="padding-top: 25%;">
+                <span id="currentperson" style="font-size:400%;">&nbsp;</span>
+            </div>
+        </div>
+        <div style="padding-top:5%;width:50%;float:left;">
+            <h2>历史记录</h2>
+            <div style="text-align: left;">
+            <div id="outstanding">
+                特等奖:<span id="outstandingtext"></span>
+            </div>
+            <br>
+            <div id="first">
+                一等奖:<span id="firsttext"></span>
+            </div>
+            <br>
+            <div id="second">
+                二等奖:<span id="secondtext"></span>
+            </div>
+            <br>
+            <div id="third">
+                三等奖:<span id="thirdtext"></span>
+            </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary" id="start"
+        style="width:50%;position: absolute; left:50%;right:50%;transform:translate(-50%,-50%);bottom: 5%;margin:0 auto;">开始</button>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+<script>
+    var flag = false;
+    var int;
+    var i = 0;
+    var currentprize = 0;
+    var namearray = ["丁琪", "王日遥", "王知行", "王继恒", "节楚", "田坤阳", "列钰帆", "朱梓豪", "乔成烨", "伍颖怡", "向一鸣", "刘俊祺", "许锦鸿", "孙锐", "李嘉慧", "杨恪", "何乐致", "何尚钊", "何昕毅", "何佳绮", "谷雨曦", "邹子锐", "沈家鹏", "张浩天", "张晴亮", "张楚天", "张锦韬", "张睿", "陆美彤", "陈愉均", "陈睿伟", "林伟隆", "罗尚妍", "周文轩", "姚梓隽", "袁艺瑄", "莫筱妍", "贾天睦", "钱程", "徐艺萌", "黄卓鋆", "黄诗雅", "黄梓良", "康鸿昱", "梁子圣", "梁钰堃", "董汇鹏", "蒋子玥", "曾瀚祺", "温卓羲", "赖子山", "詹耀杰", "蔡祺晖", "谭梓炜", "陈丹霞", "阳玉莹", "谭建华", "李平", "周松根", "郭红霞"];
+    var totalprize=[1,10,20,29];
+    var extract=[0,0,0,0];
+    var prize="";
+    $("#start").click(function () {
+        if (!flag) {
+            if (namearray.length == 0) {
+                alert("已经抽完");
+                return;
+            }
+            if(totalprize[currentprize]==extract[currentprize]){
+                alert("当前奖已经抽完");
+                return;
+            }
+            int = self.setInterval("work()", 20);
+            $("#start").text("停止");
+        } else {
+            int = window.clearInterval(int);
+            $("#start").text("开始");
+            switch (currentprize) {
+                case 0:
+                    $("#outstandingtext").html($("#outstandingtext").html()+"&nbsp;&nbsp;&nbsp;&nbsp;"+$("#currentperson").text());
+                    break;
+                case 1:
+                    $("#firsttext").html($("#firsttext").html()+"&nbsp;&nbsp;&nbsp;&nbsp;"+$("#currentperson").text());
+                    break;
+                case 2:
+                    $("#secondtext").html($("#secondtext").html()+"&nbsp;&nbsp;&nbsp;&nbsp;"+$("#currentperson").text());
+                    break;
+                case 3:
+                    $("#thirdtext").html($("#thirdtext").html()+"&nbsp;&nbsp;&nbsp;&nbsp;"+$("#currentperson").text());
+                    break;
+                default:
+                    break;
+            }
+            extract[currentprize]++;
+        switch (currentprize) {
+                case 0:
+                    prize="特等奖";
+                    break;
+                case 1:
+                    prize="一等奖";
+                    break;
+                case 2:
+                    prize="二等奖";
+                    break;
+                case 3:
+                    prize="三等奖";
+                    break;
+                default:
+                    break;
+            }
+            $("#status").text(prize+"共"+totalprize[currentprize]+"份，已抽"+extract[currentprize]+"份");
+            namearray.splice(i - 1, 1);
+        }
+        flag = !flag;
+    });
+    function work() {
+        if (i >= namearray.length) {
+            i = 0;
+        }
+        $("#currentperson").text(namearray[i++]);
+    }
+    $('#carousel').carousel({
+        interval: 0
+    })
+    $('#carousel').on('slide.bs.carousel', function (event) {
+        currentprize = event['to'];
+        switch (currentprize) {
+                case 0:
+                    prize="特等奖";
+                    break;
+                case 1:
+                    prize="一等奖";
+                    break;
+                case 2:
+                    prize="二等奖";
+                    break;
+                case 3:
+                    prize="三等奖";
+                    break;
+                default:
+                    break;
+            }
+        $("#status").text(prize+"共"+totalprize[currentprize]+"份，已抽"+extract[currentprize]+"份");
+    });
+    
+</script>
+<style>
+    body {
+        color: white;
+    }
+
+    .carousel-indicators {
+        bottom: auto !important;
+    }
+
+    .award {
+        background-color: red;
+        font-size: 300%;
+    }
+
+    html,
+    body {
+        height: 100%;
+    }
+</style>
+
+</html>
