@@ -13,25 +13,25 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      — uses: actions/checkout@v2
-      — name: setup node
+      - uses: actions/checkout@v2
+      - name: setup node
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      — name: install rust stable
+      - name: install rust stable
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           profile: minimal
-      — name: install webkit2gtk
+      - name: install webkit2gtk
         run: |
           sudo apt-get update
           sudo apt-get install -y webkit2gtk-4.0
-      — run: yarn
-      — name: build nota for tauri app
+      - run: yarn
+      - name: build nota for tauri app
         run: yarn build
-      — run: cargo install tauri-bundler --force
-      — name: build tauri app
+      - run: cargo install tauri-bundler --force
+      - name: build tauri app
         run: yarn tauri:build
 
   create-release:
@@ -41,14 +41,14 @@ jobs:
       RELEASE_UPLOAD_URL: ${{ steps.create_tauri_release.outputs.upload_url }}
 
     steps:
-      — uses: actions/checkout@v2
-      — name: setup node
+      - uses: actions/checkout@v2
+      - name: setup node
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      — name: get version
+      - name: get version
         run: echo ::set-env name=PACKAGE_VERSION::$(node -p "require('./package.json').version")
-      — name: create release
+      - name: create release
         id: create_tauri_release
         uses: jbolda/create-release@v1.1.0
         env:
@@ -70,31 +70,31 @@ jobs:
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest]
         include:
-          — platform: ubuntu-latest
+          - platform: ubuntu-latest
             buildFolder: bundle/deb
             ext: \_0.1.0_amd64.deb
             compressed: ''
-          — platform: macos-latest
+          - platform: macos-latest
             buildFolder: bundle/osx
             ext: .app
             compressed: .tgz
-          — platform: windows-latest
+          - platform: windows-latest
             buildFolder: ''
             ext: .x64.msi
             compressed: ''
 
     steps:
-      — uses: actions/checkout@v2
-      — name: setup node
+      - uses: actions/checkout@v2
+      - name: setup node
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      — name: install rust stable
+      - name: install rust stable
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           profile: minimal
-      — name: install webkit2gtk (ubuntu only)
+      - name: install webkit2gtk (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
